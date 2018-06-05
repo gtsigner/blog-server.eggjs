@@ -121,10 +121,13 @@ class PostsController extends Controller {
       //然后解析
       post.pics = [];
       const pics = [];
-      post.content.match(/\!\[.+\]\(.+\)/g).forEach((p) => {
-        p = p.replace(/\!\[.+\]/g, '').replace(/\(|\)/g, '');
-        pics.push(p);
-      });
+      const matchTags = post.content.match(/\!\[.+\]\(.+\)/g);
+      if (null !== matchTags) {
+        matchTags.forEach((p) => {
+          p = p.replace(/\!\[.+\]/g, '').replace(/\(|\)/g, '');
+          pics.push(p);
+        });
+      }
       post.pics = pics;
       post.tags = params.tags;
       post._categoryId = params._categoryId;
