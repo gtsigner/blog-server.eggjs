@@ -67,7 +67,7 @@ class PostsController extends Controller {
     const {ctx} = this;
     const posts = await ctx.model.Post.find({
       _creatorId: ctx.user._id,
-      published: false,
+      //published: false,
       //status: 0
     }).sort({updateAt: -1}).exec();
     ctx.body = posts;
