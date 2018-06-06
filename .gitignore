@@ -10,3 +10,6 @@ run/
 *.sw*
 *.un~
 config/env
+certs
+config/config.default.js
+config/config.prod.js

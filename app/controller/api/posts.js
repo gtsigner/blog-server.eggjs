@@ -90,7 +90,13 @@ class PostsController extends Controller {
       post.updateAt = Date.now();
       post.title = params.title;
       post.content = params.content;
-      await post.save();
+      post.pics = this.filterTags(post.content);
+      post.tags = params.tags;
+      post.save().then((res) => {
+        //Save Success
+      }).catch((err) => {
+        throw err;
+      });
       ctx.body = post;
     } catch (e) {
       ctx.body = {code: Enums.ApiCodes.FAIL, message: e.message};
@@ -119,16 +125,7 @@ class PostsController extends Controller {
       post.desc = (params.desc);
       post.content = (params.content);
       //然后解析
-      post.pics = [];
-      const pics = [];
-      const matchTags = post.content.match(/\!\[.+\]\(.+\)/g);
-      if (null !== matchTags) {
-        matchTags.forEach((p) => {
-          p = p.replace(/\!\[.+\]/g, '').replace(/\(|\)/g, '');
-          pics.push(p);
-        });
-      }
-      post.pics = pics;
+      post.pics = this.filterTags(post.content);
       post.tags = params.tags;
       post._categoryId = params._categoryId;
       await post.save();
@@ -136,6 +133,23 @@ class PostsController extends Controller {
     } catch (e) {
       ctx.body = {code: Enums.ApiCodes.FAIL, message: e.message};
     }
+  }
+
+  /**
+   *  过滤出Tags
+   * @param contentStr
+   * @returns {Array}
+   */
+  filterTags(contentStr) {
+    const pics = [];
+    const matchTags = contentStr.match(/\!\[.+\]\(.+\)/g);
+    if (null !== matchTags) {
+      matchTags.forEach((p) => {
+        p = p.replace(/\!\[.+\]/g, '').replace(/\(|\)/g, '');
+        pics.push(p);
+      });
+    }
+    return pics;
   }
 }
 
